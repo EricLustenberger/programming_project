@@ -1,0 +1,37 @@
+\begin{theindex}
+
+  \item Agent (class in src.model\_code.agent), \hyperpage{15}
+
+  \indexspace
+
+  \item bld.project\_paths (module), \hyperpage{2}
+
+  \indexspace
+
+  \item move\_until\_happy() (Agent method), \hyperpage{15}
+
+  \indexspace
+
+  \item plot\_locations() (in module src.final.plot\_locations), 
+		\hyperpage{11}
+  \item project\_paths\_join() (in module bld.project\_paths), 
+		\hyperpage{2}
+  \item project\_paths\_join\_latex() (in module bld.project\_paths), 
+		\hyperpage{3}
+
+  \indexspace
+
+  \item run\_analysis() (in module src.analysis.schelling), 
+		\hyperpage{9}
+
+  \indexspace
+
+  \item setup\_agents() (in module src.analysis.schelling), 
+		\hyperpage{9}
+  \item src.analysis.schelling (module), \hyperpage{9}
+  \item src.data\_management.get\_simulation\_draws (module), 
+		\hyperpage{7}
+  \item src.final.plot\_locations (module), \hyperpage{11}
+  \item src.model\_code.agent (module), \hyperpage{15}
+
+\end{theindex}

@@ -1,0 +1,19 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Getting started}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Project paths}{2}{section.1.2}
+\contentsline {chapter}{\numberline {2}Original data}{5}{chapter.2}
+\contentsline {chapter}{\numberline {3}Data management}{7}{chapter.3}
+\contentsline {chapter}{\numberline {4}Main model estimations / simulations}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}Schelling example}{9}{section.4.1}
+\contentsline {chapter}{\numberline {5}Visualisation and results formatting}{11}{chapter.5}
+\contentsline {section}{\numberline {5.1}Schelling example}{11}{section.5.1}
+\contentsline {chapter}{\numberline {6}Research paper / presentations}{13}{chapter.6}
+\contentsline {chapter}{\numberline {7}Model code}{15}{chapter.7}
+\contentsline {section}{\numberline {7.1}The \texttt {Agent} class of the Schelling example}{15}{section.7.1}
+\contentsline {chapter}{\numberline {8}Model specifications}{17}{chapter.8}
+\contentsline {chapter}{\numberline {9}Code library}{19}{chapter.9}
+\contentsline {chapter}{\numberline {10}References}{21}{chapter.10}
+\contentsline {chapter}{Bibliography}{23}{chapter*.18}
+\contentsline {chapter}{Python Module Index}{25}{section*.21}
+\contentsline {chapter}{Index}{27}{section*.22}

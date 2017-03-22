@@ -1,0 +1,15 @@
+[0] Config.pm:343> INFO - This is Biber 2.5
+[0] Config.pm:346> INFO - Logfile is 'research_pres_30min.blg'
+[81] biber-darwin:290> INFO - === Sun Jan 15, 2017, 10:42:24
+[163] Biber.pm:351> INFO - Reading 'research_pres_30min.bcf'
+[346] Biber.pm:776> INFO - Found 3 citekeys in bib section 0
+[370] Biber.pm:3493> INFO - Processing section 0
+[408] Biber.pm:3657> INFO - Looking for bibtex format file 'refs.bib' for section 0
+[592] bibtex.pm:1187> INFO - Decoding LaTeX character macros into UTF-8
+[601] bibtex.pm:1048> INFO - Found BibTeX data source '/Users/Eric/Desktop/Uni/MSc_Economics/Advanced_Modules/3rd_Semester/Programming/prog-econ/econ-project-templates/src/paper/refs.bib'
+[653] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[653] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[654] Biber.pm:3306> INFO - Sorting list 'nyt/global/' of type 'entry' with scheme 'nyt' and locale 'en-US'
+[654] Biber.pm:3310> INFO - No sort tailoring available for locale 'en-US'
+[661] bbl.pm:526> INFO - Writing 'research_pres_30min.bbl' with encoding 'UTF-8'
+[662] bbl.pm:619> INFO - Output to research_pres_30min.bbl

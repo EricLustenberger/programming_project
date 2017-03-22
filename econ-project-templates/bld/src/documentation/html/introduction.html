@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &#8212; TTT  documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TTT  documentation" href="index.html" />
+    <link rel="next" title="Original data" href="original_data.html" />
+    <link rel="prev" title="Welcome to the TTT project’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>TTT  documentation</span></a></h1>
+        <h2 class="heading"><span>Introduction</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to the TTT project&#8217;s documentation!</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="original_data.html">Original data</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="introduction">
+<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>Documentation on the rationale, Waf, and more background is at <a class="reference external" href="http://hmgaudecker.github.io/econ-project-templates/">http://hmgaudecker.github.io/econ-project-templates/</a></p>
+<p>The Python version of the template uses a modified version of Stachurski&#8217;s and Sargent&#8217;s code accompanying their Online Course <a class="reference internal" href="references.html#stachurskisargent13" id="id2">[2]</a> for Schelling&#8217;s (1969, <a class="reference internal" href="references.html#schelling69" id="id3">[1]</a>) segregation model as the running exmaple.</p>
+<div class="section" id="getting-started">
+<span id="id4"></span><h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p><strong>This assumes you have completed the steps in the</strong> <a class="reference external" href="https://github.com/hmgaudecker/econ-project-templates/tree/python#templates-for-reproducible-research-projects-in-economics">README.md file</a> <strong>and everything worked.</strong></p>
+<p>The logic of the project template works by step of the analysis:</p>
+<ol class="arabic simple">
+<li>Data management</li>
+<li>The actual estimations / simulations / ?</li>
+<li>Visualisation and results formatting (e.g. exporting of LaTeX tables)</li>
+<li>Research paper and presentations.</li>
+</ol>
+<p>It can be useful to have code and model parameters available to more than one of these steps, in that case see sections <a class="reference internal" href="model_specs.html#model-specifications"><span class="std std-ref">Model specifications</span></a>, <a class="reference internal" href="model_code.html#model-code"><span class="std std-ref">Model code</span></a>, and <a class="reference internal" href="library.html#library"><span class="std std-ref">Code library</span></a>.</p>
+<p>First of all, think about whether this structure fits your needs &#8211; if it does not, you need to adjust (delete/add/rename) directories and files in the following locations:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Directories in <strong>src/</strong>;</li>
+<li>The list of included wscript files in <strong>src/wscript</strong>;</li>
+<li>The documentation source files in <strong>src/documentation/</strong> (Note: These should follow the directories in <strong>src</strong> exactly);</li>
+<li>The list of included documentation source files in <strong>src/documentation/index.rst</strong></li>
+</ul>
+</div></blockquote>
+<p>Later adjustments should be painlessly possible, so things won&#8217;t be set in stone.</p>
+<p>Once you have done that, move your source data to <strong>src/original_data/</strong> and start filling up the actual steps of the project workflow (data management, analysis, final steps, paper). All you should need to worry about is to call the correct task generators in the wscript files. Always specify the actions in the wscript that lives in the same directory as your main source file. Make sure you understand how the paths work in Waf and how to use the auto-generated files in the language you are using particular language (see the section <a class="reference internal" href="#project-paths"><span class="std std-ref">Project paths</span></a> below).</p>
+</div>
+<div class="section" id="project-paths">
+<span id="id5"></span><h2>Project paths<a class="headerlink" href="#project-paths" title="Permalink to this headline">¶</a></h2>
+<p>A variety of project paths are defined in the top-level wscript file. These are exported to header files in other languages. So in case you require different paths (e.g. if you have many different datasets, you may want to have one path to each of them), adjust them in the top-level wscript file.</p>
+<p>The following is taken from the top-level wscript file. Modify any project-wide path settings there.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>
+
+<span class="k">def</span> <span class="nf">set_project_paths</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary with project paths represented by Waf nodes.&quot;&quot;&quot;</span>
+
+    <span class="n">pp</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;PROJECT_ROOT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;IN_DATA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;src/original_data&#39;</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;IN_MODEL_CODE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;src/model_code&#39;</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;IN_MODEL_SPECS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;src/model_specs&#39;</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;OUT_DATA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/out/data&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;OUT_ANALYSIS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/out/analysis&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;OUT_FINAL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/out/final&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;OUT_FIGURES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/out/figures&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;OUT_TABLES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/out/tables&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p>As should be evident from the similarity of the names, the paths follow the steps of the analysis in the <code class="file docutils literal"><span class="pre">src</span></code> directory:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><strong>data_management</strong> → <strong>OUT_DATA</strong></li>
+<li><strong>analysis</strong> → <strong>OUT_ANALYSIS</strong></li>
+<li><strong>final</strong> → <strong>OUT_FINAL</strong>, <strong>OUT_FIGURES</strong>, <strong>OUT_TABLES</strong></li>
+</ol>
+</div></blockquote>
+<p>These will re-appear in automatically generated header files by calling the <code class="docutils literal"><span class="pre">write_project_paths</span></code> task generator (just use an output file with the correct extension for the language you need &#8211; <code class="docutils literal"><span class="pre">.py</span></code>, <code class="docutils literal"><span class="pre">.r</span></code>, <code class="docutils literal"><span class="pre">.m</span></code>, <code class="docutils literal"><span class="pre">.do</span></code>)</p>
+<p>By default, these header files are generated in the top-level build directory, i.e. <code class="docutils literal"><span class="pre">bld</span></code>. The Python version defines a dictionary <code class="docutils literal"><span class="pre">project_paths</span></code> and a couple of convencience functions documented below. You can access these by adding a line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bld.project_paths</span> <span class="k">import</span> <span class="n">XXX</span>
+</pre></div>
+</div>
+<p>at the top of you Python-scripts. Here is the documentation of the module:</p>
+<blockquote>
+<div><p><strong>bld.project_paths</strong></p>
+<span class="target" id="module-bld.project_paths"></span><p>Define a dictionary <em>project_paths</em> with path
+definitions for the entire project.</p>
+<p>This module is automatically generated by Waf, never change it!</p>
+<p>If paths need adjustment, change them in the root wscript file.</p>
+<dl class="function">
+<dt id="bld.project_paths.project_paths_join">
+<code class="descname">project_paths_join</code><span class="sig-paren">(</span><em>key</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bld/project_paths.html#project_paths_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bld.project_paths.project_paths_join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given input of a <em>key</em> in the <em>project_paths</em> dictionary and a number
+of path arguments <em>args</em>, return the joined path constructed by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_paths</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bld.project_paths.project_paths_join_latex">
+<code class="descname">project_paths_join_latex</code><span class="sig-paren">(</span><em>key</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bld/project_paths.html#project_paths_join_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bld.project_paths.project_paths_join_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given input of a <em>key</em> in the <em>project_paths</em> dictionary and a number
+of path arguments <em>args</em>, return the joined path constructed by:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_paths</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and backslashes replaced by forward slashes.</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="index.html">Welcome to the TTT project&#8217;s documentation!</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="original_data.html">Original data</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013-, NNN.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>
