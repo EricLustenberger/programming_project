@@ -35,7 +35,7 @@ Usage::
 import os
 from waflib import Task, TaskGen, Logs
 
-MATLAB_COMMANDS = ['matlab']
+MATLAB_COMMANDS = ['/Applications/MATLAB_R2015b.app/bin/matlab']
 
 
 def configure(ctx):
