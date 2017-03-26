@@ -2,9 +2,6 @@
 % Produces the welfare vs benefits plots recalling the results obtained
 % from the welfare_analysis.m file. 
 
-clear
-close all
-
 % Create same grid of unemployment benefits as in "welfare_analysis"
 mu_min = 0.01;
 mu_max = 0.6;

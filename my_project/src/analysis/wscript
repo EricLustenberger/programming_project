@@ -35,11 +35,14 @@ def build(ctx):
                 ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_19.mat'),
                 ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_20.mat'),
             ],
-             # deps=[
-            #     ctx.path_to(ctx, 'IN_MODEL_SPECS', 'baseline.json',
-            #     ctx.path_to(ctx, 'IN_MODEL_CODE', 'move_until_happy.m'),
+              deps=[
+                 ctx.path_to(ctx, 'IN_MODEL_SPECS', 'baseline.json'),
+                 ctx.path_to(ctx, 'IN_MODEL_CODE', 'setup.m'),
+                 ctx.path_to(ctx, 'IN_MODEL_CODE', 'aiyagari_solver.m'),
+                 ctx.path_to(ctx, 'IN_MODEL_CODE', 'cash_equivalent.m'),
+                 ctx.path_to(ctx, 'IN_MODEL_CODE', 'consumption_equivalent.m'),
                  # ctx.path_to(ctx, 'OUT_DATA', 'sample.mat'),
-            # ],
+             ],
             # append="('{}')".format(model),
             # name='{}_{}'.format(source, model)
             )

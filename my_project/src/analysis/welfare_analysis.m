@@ -13,17 +13,34 @@
 clear
 close all
 
-parameters % load paramaters
-setup % load setup
 
-% Create grid of unemployment benefits for the analysis
-mu_min = 0.01;
-mu_max = 0.6;
-mu_n = 20;
-mu = linspace(mu_min, mu_max, mu_n);
-mu(7) = mu(6); % the original point does not converge
-mu(6) = 0.15; % the original point does not converge
-mu(8) = 0.18; % the original point does not converge
+% Add path to relevant model code
+addpath ../model_code/
+
+% Add path to matlab-json parser
+addpath ../library/matlab-json/
+json.startup
+
+% Load model specifications
+baseline = json.read(project_paths('IN_MODEL_SPECS', ['baseline.json']));
+par.beta = baseline.discount_factor;
+par.sigma = baseline.risk_aversion; 
+par.mu = baseline.baseline_policy;
+par.k_min= baseline.borrowing_constraint;
+par.delta = baseline.depreciation_rate;
+par.alpha = baseline.output_elasticity_of_capital;
+par.z = baseline.productivity; 
+par.PI_EU = baseline.job_loss_probability;
+par.PI_UE = baseline.job_finding_probability;
+mu = baseline.replacement_rate;
+
+% solution methods
+% Default setup for analysis
+method.HH = 'FP'; % 'FP' for fixed-point iteration in household problem, 'FPend' for using endogenous grid points
+method.sim = 'simulation'; % 'simulation' for simulation, 'histogram' for histogram method
+method.agg = 'bisectio'; % 'bisection' to use bisection method, gradual updating otherwise
+
+setup % load setup
 
 % Corresponding PI_UE grid for analysis 
 PI_UE_grid = [0.418006431, 0.413867753, 0.409823146, 0.405844156, 0.401954115,0.4, 0.398125746, 0.396341463, 0.38708909, 0.383537395, 0.380061395, 0.376636922, 0.373284328, 0.369980363, 0.366744717, 0.363555009, 0.360430298, 0.35734902, 0.354329636, 0.351351351];
