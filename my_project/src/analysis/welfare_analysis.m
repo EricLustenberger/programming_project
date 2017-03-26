@@ -64,13 +64,13 @@ for i=1:2
             %probability grid for the experiment
 
         % adjust method for different values of mu to ensure convergence
-            if ii < 10
+            if ii < 9
                 method.HH = 'FP'; % Depending on the mu, you might have to change it to 'FP' or 'FPend' to converge;
                 method.agg = 'bisectio'; % Depending on the mu, you might have to change it to 'bisection' or 'bisectio' to converge;
             else
                 method.HH = 'FP'; % Depending on the mu, you might have to change it to 'FP' or 'FPend' to converge;
                 method.agg = 'bisection'; % Depending on the mu, you might have to change it to 'bisection' or 'bisectio' to converge;
-
+            end
             setup % refresh setup for new parameter
             [ k.two, c.two, K.two, sim.two, store.two, mat.two, grid.two ] = aiyagari_solver( par, func, method );
             U.two.guess = func.U(c.two.guess);
@@ -114,10 +114,10 @@ for i=1:2
             keep.k.equivalent_employed_mean = k.equivalent_employed_mean;
             keep.k.equivalent_employed_median = k.equivalent_employed_median;
             keep.K = K.two.guess;
+
+            filename = ['baseline_' num2str(ii) '.mat']; %Store the values for each grid-point
+            save(project_paths('OUT_ANALYSIS', filename),'-struct','keep');   
            
-            filename = ['baseline_mu_' num2str(ii) '.mat']; %Store the values for each grid-point
-            save (filename, '-struct','keep'); % Save the values
-            save(project_paths('OUT_ANALYSIS', ['baseline_mu__' num2str(ii) '.mat']);   
             toc
         end
     end

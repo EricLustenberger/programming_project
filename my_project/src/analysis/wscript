@@ -3,24 +3,43 @@
 
 def build(ctx):
 
-    def out_analysis(*args):
-        "Just a simple wrapper for quick access"
-        return ctx.path_to(ctx, 'OUT_ANALYSIS', *args)
+    # def out_analysis(*args):
+    #     "Just a simple wrapper for quick access"
+    #     return ctx.path_to(ctx, 'OUT_ANALYSIS', *args)
 
     # Illustrate use of run_m_script with automatic model specification.
-    for model in 'baseline', 'max_moves_2':
-        source = 'schelling'
+    # for model in 'baseline', 'max_moves_2':
         ctx(
             features='run_m_script',
-            source='{}.m'.format(source),
+            source= 'welfare_analysis.m',
+            # source='{}.m'.format(source),
             target=[
-                out_analysis('{}_{}.mat'.format(source, model)),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_1.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_2.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_3.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_4.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_5.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_6.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_7.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_8.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_9.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_10.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_11.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_12.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_13.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_14.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_15.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_16.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_17.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_18.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_19.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_20.mat'),
             ],
-            deps=[
-                ctx.path_to(ctx, 'IN_MODEL_SPECS', '{}.json'.format(model)),
-                ctx.path_to(ctx, 'IN_MODEL_CODE', 'move_until_happy.m'),
-                ctx.path_to(ctx, 'OUT_DATA', 'sample.mat'),
-            ],
-            append="('{}')".format(model),
-            name='{}_{}'.format(source, model)
-        )
+             # deps=[
+            #     ctx.path_to(ctx, 'IN_MODEL_SPECS', 'baseline.json',
+            #     ctx.path_to(ctx, 'IN_MODEL_CODE', 'move_until_happy.m'),
+                 # ctx.path_to(ctx, 'OUT_DATA', 'sample.mat'),
+            # ],
+            # append="('{}')".format(model),
+            # name='{}_{}'.format(source, model)
+            )

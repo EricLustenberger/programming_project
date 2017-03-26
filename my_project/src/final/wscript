@@ -2,16 +2,40 @@
 
 
 def build(ctx):
-    for model in 'baseline', 'max_moves_2':
-        source = 'plot_locations'
+    # for model in 'baseline', 'max_moves_2':
+    #     source = 'plot_locations'
         ctx(
             features='run_m_script',
-            source='{}.m'.format(source),
-            target=ctx.path_to(ctx, 'OUT_FIGURES', 'schelling_{}.png'.format(model)),
-            deps=[
-                ctx.path_to(ctx, 'OUT_ANALYSIS', 'schelling_{}.mat'.format(model)),
-                ctx.path_to(ctx, 'IN_MODEL_SPECS', '{}.json'.format(model))
+            source='graph_equivalents.m',
+            target=[ctx.path_to(ctx, 'OUT_FIGURES', 'cash_equivalent_ue_vs_e.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'cash_equivalent_total.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_equivalent_ue_vs_e.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_equivalent_total.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_vs_cash_equivalent.png'),
             ],
-            append="('{}')".format(model),
-            name='{}_{}'.format(source, model)
+            deps=[
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_1.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_2.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_3.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_4.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_5.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_6.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_7.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_8.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_9.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_10.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_11.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_12.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_13.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_14.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_15.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_16.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_17.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_18.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_19.mat'),
+                ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_20.mat'),
+                # ctx.path_to(ctx, 'IN_MODEL_SPECS', '{}.json'.format(model))
+            ],
+            # append="('{}')".format(model),
+            # name='{}_{}'.format(source, model)
         )

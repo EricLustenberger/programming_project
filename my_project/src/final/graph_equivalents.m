@@ -14,13 +14,11 @@ mu(7) = mu(6);% the original point does not converge
 mu(6) = 0.15; % the original point does not converge
 mu(8) = 0.18; % the original point does not converge
 
-
-
 % Load the data
 for i=1:mu_n
-    filename = ['baseline_mu_' num2str(i) '.mat'];
-    c(i) = load(filename, 'c');
-    k(i) = load(filename, 'k');
+    filename = ['baseline_' num2str(i) '.mat'];
+    c(i) = load(project_paths('OUT_ANALYSIS',filename), 'c');
+    k(i) = load(project_paths('OUT_ANALYSIS',filename), 'k');
     c_equiv(i,:) = [c(i).c.equivalent_mean, c(i).c.equivalent_median, c(i).c.equivalent_unemployed_mean, c(i).c.equivalent_unemployed_median, c(i).c.equivalent_employed_mean, c(i).c.equivalent_employed_median];
     k_equiv(i,:) = [k(i).k.equivalent_mean, k(i).k.equivalent_median, k(i).k.equivalent_unemployed_mean, k(i).k.equivalent_unemployed_median, k(i).k.equivalent_employed_mean, k(i).k.equivalent_employed_median];
 end
@@ -37,6 +35,7 @@ xlabel('unemployment benefit')
 ylabel('cash equivalent / output')
 refline (0,0)
 axis tight
+saveas(gcf,project_paths('OUT_FIGURES','cash_equivalent_ue_vs_e.png'));
 
 figure (2)
 plot(mu(1:13)', k_equiv(1:13,1)./ output_baseline,'r', mu(1:13)', k_equiv(1:13,2)./ output_baseline,'--r')
@@ -44,7 +43,7 @@ legend('mean','median')
 xlabel('unemployment benefit')
 ylabel('cash equivalent / output')
 refline (0,0)
-
+saveas(gcf,project_paths('OUT_FIGURES','cash_equivalent_total.png'));
 
 figure (3)
 plot(mu', c_equiv(:,3),'m', mu', c_equiv(:,5),'g' ...
@@ -54,6 +53,7 @@ xlabel('unemployment benefit')
 ylabel('consumption equivalent')
 refline (0,1)
 axis tight
+saveas(gcf,project_paths('OUT_FIGURES','consumption_equivalent_ue_vs_e.png'));
 
 figure (4)
 plot(mu', c_equiv(:,1),'r', mu', c_equiv(:,2),'--r')
@@ -62,6 +62,7 @@ xlabel('unemployment benefit')
 ylabel('consumption equivalent')
 refline (0,1)
 axis tight
+saveas(gcf,project_paths('OUT_FIGURES','consumption_equivalent_total.png'));
 
 figure (5)
 plot(mu(1:9)', k_equiv(1:9,1)./ output_baseline,'r', mu(1:9)', (c_equiv(1:9,1)-1).*100, 'g' ...
@@ -71,3 +72,4 @@ xlabel('unemployment benefit')
 %ylabel('cash equivalent / output', 'consumption equivalent')
 refline (0,0)
 axis tight
+saveas(gcf,project_paths('OUT_FIGURES','consumption_vs_cash_equivalent.png'));
