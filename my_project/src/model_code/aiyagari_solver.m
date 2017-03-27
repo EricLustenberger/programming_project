@@ -1,4 +1,4 @@
-function [ k, c, K, sim, store, mat, grid] = aiyagari_solver( par, func, method)
+function [ k, c, K, sim, store, mat, grid] = aiyagari_solver( par, func, method, simulation)
 % AIYAGARI MODEL: Heterogeneous agents model due to idiosyncratic labour
 % shocks. Agents self-sinsure against unemploment by building capital
 % stock.
@@ -7,6 +7,12 @@ function [ k, c, K, sim, store, mat, grid] = aiyagari_solver( par, func, method)
 %   func = Helpful functions to automate certain calculations.
 %   method = Describe the method of iteration/ simutation.
 
+    %redefine simulation
+    sim.k = simulation.k;
+    sim.e = simulation.e;
+    sim.shock = simulation.shock;
+    ind_no = simulation.ind_no;
+    T = simulation.T;
 
     K.rep = func.K(1/par.beta-1+par.delta);% capital stock of representative agent useful for comparison
 
@@ -96,60 +102,20 @@ function [ k, c, K, sim, store, mat, grid] = aiyagari_solver( par, func, method)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%    Find distribution of agents
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-        if strcmp(method.sim ,'simulation')
-            rng('default') % reset random number generator
-            ind_no = 20; % number of individuals simulated
-            T = 20; % number of periods simulated
+         
+        sim.e(1,1:round(par.L*ind_no))=2; % initial individuals that are employed
+        sim.k(1,:) = K.guess; % initial capital holdings
 
-            sim.k = zeros(T,ind_no); % simulated values of capital stock
-            sim.e = ones(T,ind_no); % simulated employment status
-            sim.shock = rand(T,ind_no); % shocks for employment transition
-
-            sim.e(1,1:round(par.L*ind_no))=2; % initial individuals that are employed
-            sim.k(1,:) = K.guess; % initial capital holdings
-
-            for t=2:T
-                sim.e(t,sim.e(t-1,:)==1) = 1+(sim.shock(t,sim.e(t-1,:)==1)<=par.PI(1,2)); % new employment status of previously unemployed
-                sim.e(t,sim.e(t-1,:)==2) = 1+(sim.shock(t,sim.e(t-1,:)==2)<=par.PI(2,2)); % new employment status of previously employed    
-                sim.k(t,sim.e(t,:)==1) = interp1(grid.k,k.guess(:,1),sim.k(t-1,sim.e(t,:)==1),'linear','extrap'); % capital demand of currently unemployed
-                sim.k(t,sim.e(t,:)==2) = interp1(grid.k,k.guess(:,2),sim.k(t-1,sim.e(t,:)==2),'linear','extrap'); % capital demand of currently employed
-            end
+        for t=2:T
+            sim.e(t,sim.e(t-1,:)==1) = 1+(sim.shock(t,sim.e(t-1,:)==1)<=par.PI(1,2)); % new employment status of previously unemployed
+            sim.e(t,sim.e(t-1,:)==2) = 1+(sim.shock(t,sim.e(t-1,:)==2)<=par.PI(2,2)); % new employment status of previously employed    
+            sim.k(t,sim.e(t,:)==1) = interp1(grid.k,k.guess(:,1),sim.k(t-1,sim.e(t,:)==1),'linear','extrap'); % capital demand of currently unemployed
+            sim.k(t,sim.e(t,:)==2) = interp1(grid.k,k.guess(:,2),sim.k(t-1,sim.e(t,:)==2),'linear','extrap'); % capital demand of currently employed
+        end
 
             K.demand = mean(mean(sim.k(ceil(T/2):end,:))); % average capital holdings over second half of sample
             sim.L = mean(mean(sim.e(ceil(T/2):end,:)==2)); % average employment
-
-        elseif strcmp(method.sim,'histogram')
-
-            for i=1:2 % currently unemployed and employed
-                k.k(:,i) = max(par.k_min*K.guess,min(grid.dist(end),interp1(grid.k,k.guess(:,i),grid.dist,'linear','extrap'))); % policy function on grid used for distribution
-
-                temp = interp1(grid.dist,1:grid.dist_no,k.k(:,i),'linear','extrap'); % point in distribution to which weight is moved
-                k.ind(:,i) = max(1,min(grid.dist_no-1,floor(temp))); % index of first grid point
-                k.weight(:,i) = k.ind(:,i)+1-temp; % weight of first grid point
-
-            end
-
-            % build transition matrix of agents containing 4 blocks [UU,UE;EU;EE]
-            % transition of capital for unemployed
-            trans_U = sparse([1:grid.dist_no,1:grid.dist_no]',[k.ind(:,1);k.ind(:,1)+1],[k.weight(:,1);1-k.weight(:,1)],grid.dist_no,grid.dist_no);
-            % transition of capital for employed
-            trans_E = sparse([1:grid.dist_no,1:grid.dist_no]',[k.ind(:,2);k.ind(:,2)+1],[k.weight(:,2);1-k.weight(:,2)],grid.dist_no,grid.dist_no);
-
-            transition = [par.PI(1,1)*trans_U,par.PI(1,2)*trans_U;par.PI(2,1)*trans_E,par.PI(2,2)*trans_E];
-            warning('off','all')
-            [eigvector,~] = eigs(transition',1,1); % find Eigenvector of transition matrix with Eigenvalue 1
-
-            % alternative calculation of eigenvector by multiplying transition
-            % matrix many times        
-            %eigvector = (transition')^1000*ones(2*grid_dist_no,1);
-            store.distribution = [eigvector(1:grid.dist_no),eigvector(grid.dist_no+(1:grid.dist_no))]/sum(eigvector);
-
-            % alternative way to calculate distribution by solving linear
-            % system of equations
-            %distribution = reshape([(eye(2*grid_dist_no)-transition');ones(1,2*grid_dist_no,1)]\[zeros(2*grid_dist_no,1);1],grid_dist_no,2);
-            K.demand = sum(sum(store.distribution.*k.k)); % aggregate capital demanded
-            sim.L = sum(store.distribution(grid.dist_no+(1:grid.dist_no)));
-        end
+        
 
         d1 = abs(K.demand-K.guess)./(1+K.guess); % deviation between guess for capital and demanded capital stock
 

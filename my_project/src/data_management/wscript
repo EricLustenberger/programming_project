@@ -7,6 +7,6 @@ def build(ctx):
     ctx(
         features='run_m_script',
         source='get_simulation_draws.m',
-        target=ctx.path_to(ctx, 'OUT_DATA', 'sample.mat'),
+        target=ctx.path_to(ctx, 'OUT_DATA', 'simulation.mat'),
         name='get_simulation_draws'
     )

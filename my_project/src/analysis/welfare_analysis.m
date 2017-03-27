@@ -21,23 +21,16 @@ addpath ../model_code/
 addpath ../library/matlab-json/
 json.startup
 
-% Load model specifications
-baseline = json.read(project_paths('IN_MODEL_SPECS', ['baseline.json']));
-par.beta = baseline.discount_factor;
-par.sigma = baseline.risk_aversion; 
-par.mu = baseline.baseline_policy;
-par.k_min= baseline.borrowing_constraint;
-par.delta = baseline.depreciation_rate;
-par.alpha = baseline.output_elasticity_of_capital;
-par.z = baseline.productivity; 
-par.PI_EU = baseline.job_loss_probability;
-par.PI_UE = baseline.job_finding_probability;
-mu = baseline.replacement_rate;
+%load random sample
+load(project_paths('OUT_DATA', 'simulation.mat'));
+
+% Load parameters and methods 
+par = json.read(project_paths('IN_MODEL_SPECS', ['baseline.json']));
+mu = par.mu_grid;
 
 % solution methods
 % Default setup for analysis
 method.HH = 'FP'; % 'FP' for fixed-point iteration in household problem, 'FPend' for using endogenous grid points
-method.sim = 'simulation'; % 'simulation' for simulation, 'histogram' for histogram method
 method.agg = 'bisectio'; % 'bisection' to use bisection method, gradual updating otherwise
 
 setup % load setup
@@ -54,7 +47,7 @@ PI_UE_grid = [0.418006431, 0.413867753, 0.409823146, 0.405844156, 0.401954115,0.
 % the values specified in the mu-grid
 for i=1:2
     if i==1 
-        [ k.one, c.one, K.one, sim.one, store.one, mat.one, grid.one ] = aiyagari_solver( par, func, method );
+        [ k.one, c.one, K.one, sim.one, store.one, mat.one, grid.one ] = aiyagari_solver(par, func, method, simulation);
         U.one.guess = func.U(c.one.guess);
         U.one.lifetime = zeros(2,grid.one.k_no); %expected life time utility
         dist=100;
@@ -65,12 +58,10 @@ for i=1:2
             U.one.lifetime = Unew;
         end
         U.one.lifetime(U.one.lifetime == -Inf) = -999999; % Get rid of -Inf for negative consumption for extrapolation
-        ind_no = size(sim.one.k,2);
-        T = size(sim.one.k,1);
-        U.one.extrap = NaN(ceil(T/2),ind_no);
-        for t = ceil((T+1)/2):T % Extrapolate life time utility
-            U.one.extrap(t-ceil(T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.one.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
-            U.one.extrap(t-ceil(T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.one.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
+        U.one.extrap = NaN(ceil(simulation.T/2),simulation.ind_no);
+        for t = ceil((simulation.T+1)/2):simulation.T % Extrapolate life time utility
+            U.one.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.one.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
+            U.one.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.one.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
         end
     elseif i==2 
         for ii=1:size(mu,2) 
@@ -89,7 +80,7 @@ for i=1:2
                 method.agg = 'bisection'; % Depending on the mu, you might have to change it to 'bisection' or 'bisectio' to converge;
             end
             setup % refresh setup for new parameter
-            [ k.two, c.two, K.two, sim.two, store.two, mat.two, grid.two ] = aiyagari_solver( par, func, method );
+            [ k.two, c.two, K.two, sim.two, store.two, mat.two, grid.two ] = aiyagari_solver( par, func, method, simulation);
             U.two.guess = func.U(c.two.guess);
             U.two.lifetime = zeros(2,grid.two.k_no); %expected life time utility
             dist=100;
@@ -100,22 +91,20 @@ for i=1:2
                 U.two.lifetime = Unew;
             end
             U.two.lifetime(U.two.lifetime == -Inf) = -999999; % Get rid of -Inf for extrapolation
-            ind_no = size(sim.one.k,2);
-            T = size(sim.one.k,1);
-            U.two.extrap = NaN(ceil(T/2),ind_no);
-            for t = ceil((T+1)/2):T % Extrapolate life time utility with idiosyncratic transition
-                U.two.extrap(t-ceil(T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.two.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
-                U.two.extrap(t-ceil(T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.two.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
+            U.two.extrap = NaN(ceil(simulation.T/2),simulation.ind_no);
+            for t = ceil((simulation.T+1)/2):simulation.T % Extrapolate life time utility with idiosyncratic transition
+                U.two.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.two.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
+                U.two.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.two.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
             end
             % Calculate the consumption equivalentof the policy reform. If c.equivalent > 1,
             % agents prefer the policy change. If 1 > c.equivalent > 0, agents prefer the
             % baseline model.
-            [ c, wc ] = consumption_equivalent (par, method, sim, U); %calling consumption_equivalent fct.
+            [ c, wc ] = consumption_equivalent (par, sim, U); %calling consumption_equivalent fct.
 
             % Calculate the cash equivalent of the policy change, If
             % k.equivalent > 0, agents prefer the policy change. If
             % k.equivalent < 0, agents prefer the baseline model.
-            [ k, wk ] = cash_equivalent (method, grid, sim, U); %calling cash_equivalent fct.
+            [ k, wk ] = cash_equivalent (grid, sim, U); %calling cash_equivalent fct.
 
             % Construct a variable of values to be stored
             keep.c.equivalent_mean = c.equivalent_mean;
