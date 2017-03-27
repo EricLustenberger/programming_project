@@ -1,3 +1,4 @@
+
 %{
 Run a Schelling (1969) segregation model and store a database with locations 
 and types at each cycle. The scripts expects a model name to be passed on 

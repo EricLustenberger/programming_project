@@ -1,4 +1,4 @@
-function [ k ] = cash_equivalent( method, grid, sim, U )
+function [ k, wk ] = cash_equivalent( method, grid, sim, U )
 %CASH EQUIVALENT Calculates the capital equivalent of a policy change
 %   method = specifies whether the simulation method is 'simulation' or 'histogram'
 %   grid = the capital grid to extrapolate the capital compensation of the
@@ -35,19 +35,11 @@ function [ k ] = cash_equivalent( method, grid, sim, U )
         
         % Sort the cash equivalent for employed and unemployed in the last period to plot them against
         % wealth
-        [k.equivalent_unemp_sorted, sort_index_unemp] = sort(k.equivalent(end,sim.one.e(T,:)==1),'descend');
-        [k.equivalent_emp_sorted, sort_index_emp] = sort(k.equivalent(end,sim.one.e(T,:)==2),'descend');
-        k_unemp = sim.one.k(T,sim.one.e(T,:)==1);
-        k_emp = sim.one.k(T,sim.one.e(T,:)==2);
-        output_baseline = 3.3539;
-        
-        figure (2)
-        plot(k_emp(sort_index_emp),k.equivalent_emp_sorted./output_baseline...
-            ,'g.',k_unemp(sort_index_unemp),k.equivalent_unemp_sorted./output_baseline,'r.')
-        legend('employed','unemployed')
-        xlabel('wealth')
-        ylabel('cash equivalent / output')
-        refline (0,0)
+        [k.equivalent_unemp_sorted, wk.sort_index_unemp] = sort(k.equivalent(end,sim.one.e(T,:)==1),'descend');
+        [k.equivalent_emp_sorted, wk.sort_index_emp] = sort(k.equivalent(end,sim.one.e(T,:)==2),'descend');
+        wk.k_unemp = sim.one.k(T,sim.one.e(T,:)==1);
+        wk.k_emp = sim.one.k(T,sim.one.e(T,:)==2);
+        output_baseline = 3.3539;       
         
         
     elseif strcmp(method.sim, 'histogram')

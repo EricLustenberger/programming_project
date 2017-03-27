@@ -110,12 +110,12 @@ for i=1:2
             % Calculate the consumption equivalentof the policy reform. If c.equivalent > 1,
             % agents prefer the policy change. If 1 > c.equivalent > 0, agents prefer the
             % baseline model.
-            [ c ] = consumption_equivalent (par, method, sim, U); %calling consumption_equivalent fct.
+            [ c, wc ] = consumption_equivalent (par, method, sim, U); %calling consumption_equivalent fct.
 
             % Calculate the cash equivalent of the policy change, If
             % k.equivalent > 0, agents prefer the policy change. If
             % k.equivalent < 0, agents prefer the baseline model.
-            [ k ] = cash_equivalent (method, grid, sim, U); %calling cash_equivalent fct.
+            [ k, wk ] = cash_equivalent (method, grid, sim, U); %calling cash_equivalent fct.
 
             % Construct a variable of values to be stored
             keep.c.equivalent_mean = c.equivalent_mean;
@@ -124,16 +124,29 @@ for i=1:2
             keep.c.equivalent_unemployed_median = c.equivalent_unemployed_median;
             keep.c.equivalent_employed_mean = c.equivalent_employed_mean;
             keep.c.equivalent_employed_median = c.equivalent_employed_median;
+            keep.c.equivalent_emp_sorted = c.equivalent_emp_sorted;
+            keep.c.equivalent_unemp_sorted = c.equivalent_unemp_sorted;
             keep.k.equivalent_mean = k.equivalent_mean;
             keep.k.equivalent_median = k.equivalent_median;
             keep.k.equivalent_unemployed_mean = k.equivalent_unemployed_mean;
             keep.k.equivalent_unemployed_median = k.equivalent_unemployed_median;
             keep.k.equivalent_employed_mean = k.equivalent_employed_mean;
             keep.k.equivalent_employed_median = k.equivalent_employed_median;
+            keep.k.equivalent_emp_sorted = k.equivalent_emp_sorted;
+            keep.k.equivalent_unemp_sorted = k.equivalent_unemp_sorted;
             keep.K = K.two.guess;
+            keep.wc.k_unemp = wc.k_unemp;
+            keep.wc.k_emp = wc.k_emp;
+            keep.wc.sort_index_unemp = wc.sort_index_unemp;
+            keep.wc.sort_index_emp = wc.sort_index_emp;
+            keep.wk.k_unemp = wk.k_unemp;
+            keep.wk.k_emp = wk.k_emp;
+            keep.wk.sort_index_unemp = wk.sort_index_unemp;
+            keep.wk.sort_index_emp = wk.sort_index_emp;
+
 
             filename = ['baseline_' num2str(ii) '.mat']; %Store the values for each grid-point
-            save(project_paths('OUT_ANALYSIS', filename),'-struct','keep');   
+            save(project_paths('OUT_ANALYSIS', filename),'-struct','keep');  
            
             toc
         end

@@ -12,8 +12,11 @@ def build(ctx):
                     ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_equivalent_ue_vs_e.png'),
                     ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_equivalent_total.png'),
                     ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_vs_cash_equivalent.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'consumption_equivalent_vs_wealth.png'),
+                    ctx.path_to(ctx, 'OUT_FIGURES', 'cash_equivalent_vs_wealth.png'),
             ],
             deps=[
+                ctx.path_to(ctx, 'IN_MODEL_SPECS', 'baseline.json'),
                 ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_1.mat'),
                 ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_2.mat'),
                 ctx.path_to(ctx, 'OUT_ANALYSIS', 'baseline_3.mat'),

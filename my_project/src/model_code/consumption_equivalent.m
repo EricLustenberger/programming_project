@@ -1,4 +1,4 @@
-function [ c ] = consumption_equivalent (par, method, sim, U)
+function [ c, wc ] = consumption_equivalent (par, method, sim, U)
 %CONSUMPTION EQUIVALENT Calculates the consumption equivalent of a policy
 %change
 %   par = parameters needed to calculate the consumption equivalent
@@ -34,19 +34,11 @@ function [ c ] = consumption_equivalent (par, method, sim, U)
         
         % Sort the consumption equivalent for employed and unemployed in the last period to plot them
         % against wealth
-        [c.equivalent_unemp_sorted, sort_index_unemp] = sort(c.equivalent(end,sim.one.e(T,:)==1),'descend');
-        [c.equivalent_emp_sorted, sort_index_emp] = sort(c.equivalent(end,sim.one.e(T,:)==2),'descend');
-        k_unemp = sim.one.k(T,sim.one.e(T,:)==1);
-        k_emp = sim.one.k(T,sim.one.e(T,:)==2);
-        
-        figure (1)
-        plot(k_emp(sort_index_emp),c.equivalent_emp_sorted,'g.',k_unemp(sort_index_unemp),c.equivalent_unemp_sorted,'r.')
-        legend('employed','unemployed')
-        xlabel('wealth')
-        ylabel('consumption equivalent')
-        refline (0,1)
-       
-       
+        [c.equivalent_unemp_sorted, wc.sort_index_unemp] = sort(c.equivalent(end,sim.one.e(T,:)==1),'descend');
+        [c.equivalent_emp_sorted, wc.sort_index_emp] = sort(c.equivalent(end,sim.one.e(T,:)==2),'descend');
+        wc.k_unemp = sim.one.k(T,sim.one.e(T,:)==1);
+        wc.k_emp = sim.one.k(T,sim.one.e(T,:)==2);
+               
     elseif strcmp(method.sim,'histogram')
         % to be done
     end

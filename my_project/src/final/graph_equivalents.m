@@ -2,25 +2,24 @@
 % Produces the welfare vs benefits plots recalling the results obtained
 % from the welfare_analysis.m file. 
 
-% Create same grid of unemployment benefits as in "welfare_analysis"
-mu_min = 0.01;
-mu_max = 0.6;
-mu_n = 20;
-mu = linspace(mu_min, mu_max, mu_n);
-mu(7) = mu(6);% the original point does not converge
-mu(6) = 0.15; % the original point does not converge
-mu(8) = 0.18; % the original point does not converge
+
+% Load unemployment insurance grid
+baseline = json.read(project_paths('IN_MODEL_SPECS', ['baseline.json']));
+mu = baseline.replacement_rate;
 
 % Load the data
 for i=1:mu_n
     filename = ['baseline_' num2str(i) '.mat'];
     c(i) = load(project_paths('OUT_ANALYSIS',filename), 'c');
     k(i) = load(project_paths('OUT_ANALYSIS',filename), 'k');
+    wk(i) = load(project_paths('OUT_ANALYSIS',filename), 'wk');
+    wc(i) = load(project_paths('OUT_ANALYSIS',filename), 'wc');
     c_equiv(i,:) = [c(i).c.equivalent_mean, c(i).c.equivalent_median, c(i).c.equivalent_unemployed_mean, c(i).c.equivalent_unemployed_median, c(i).c.equivalent_employed_mean, c(i).c.equivalent_employed_median];
     k_equiv(i,:) = [k(i).k.equivalent_mean, k(i).k.equivalent_median, k(i).k.equivalent_unemployed_mean, k(i).k.equivalent_unemployed_median, k(i).k.equivalent_employed_mean, k(i).k.equivalent_employed_median];
 end
 
 output_baseline = 3.3539;
+% Obtain cash equivalent relative to baseline output
 rel_k_equiv = k_equiv./output_baseline; % Get cash equivalent relative to output
       
 % Create the figures
@@ -70,3 +69,29 @@ xlabel('unemployment benefit')
 refline (0,0)
 axis tight
 saveas(gcf,project_paths('OUT_FIGURES','consumption_vs_cash_equivalent.png'));
+
+
+for i= baseline.wealth_plotting
+% Wealth vs equivalent figures 
+% consumption equivalent
+	figure (5+i)
+	plot(wc(i).wc.k_emp(wc(i).wc.sort_index_emp),c(i).c.equivalent_emp_sorted,'g.',wc(i).wc.k_unemp(wc(i).wc.sort_index_unemp),c(i).c.equivalent_unemp_sorted,'r.')
+	legend('employed','unemployed')
+	xlabel('wealth')
+	ylabel('consumption equivalent')
+	refline (0,1)
+	saveas(gcf,project_paths('OUT_FIGURES','consumption_equivalent_vs_wealth.png'));
+
+	figure (6+i)
+	plot(wk(i).wk.k_emp(wk(i).wk.sort_index_emp),k(i).k.equivalent_emp_sorted./output_baseline...
+    	,'g.',wk(i).wk.k_unemp(wk(i).wk.sort_index_unemp),k(i).k.equivalent_unemp_sorted./output_baseline,'r.')
+	legend('employed','unemployed')
+	xlabel('wealth')
+	ylabel('cash equivalent / output')
+	refline (0,0)
+	saveas(gcf,project_paths('OUT_FIGURES','cash_equivalent_vs_wealth.png'));
+end
+
+
+
+
