@@ -10,9 +10,7 @@
 
 % of the unemployed and employed, as well as the total means and medians welfare analysis,
 
-clear
-close all
-
+function welfare_analysis(model_name)
 
 % Add path to relevant model code
 addpath ../model_code/
@@ -25,7 +23,7 @@ json.startup
 load(project_paths('OUT_DATA', 'simulation.mat'));
 
 % Load parameters and methods 
-par = json.read(project_paths('IN_MODEL_SPECS', ['baseline.json']));
+par = json.read(project_paths('IN_MODEL_SPECS', [model_name,'.json']));
 mu = par.mu_grid;
 
 % solution methods
@@ -34,9 +32,6 @@ method.HH = 'FP'; % 'FP' for fixed-point iteration in household problem, 'FPend'
 method.agg = 'bisectio'; % 'bisection' to use bisection method, gradual updating otherwise
 
 setup % load setup
-
-% Corresponding PI_UE grid for analysis 
-PI_UE_grid = [0.418006431, 0.413867753, 0.409823146, 0.405844156, 0.401954115,0.4, 0.398125746, 0.396341463, 0.38708909, 0.383537395, 0.380061395, 0.376636922, 0.373284328, 0.369980363, 0.366744717, 0.363555009, 0.360430298, 0.35734902, 0.354329636, 0.351351351];
 
 % If you want to compare one steady state with the baseline, change
 % parameters for i=2 and leave i=1 as the baseline.
@@ -68,8 +63,11 @@ for i=1:2
             tic
             iteration = ii
             par.mu = mu(ii);
-            %par.PI_UE = PI_UE_grid(ii); %loop over the job-finding
-            %probability grid for the experiment
+            if strcmp(model_name,'endogenous_job_finding_duration')
+                par.PI_UE = par.PI_UE_grid(ii); %loop over the job-finding;
+            elseif strcmp(model_name,'baseline')
+                par.PI_UE = par.PI_UE;
+            end
 
         % adjust method for different values of mu to ensure convergence
             if ii < 9
@@ -133,11 +131,14 @@ for i=1:2
             keep.wk.sort_index_unemp = wk.sort_index_unemp;
             keep.wk.sort_index_emp = wk.sort_index_emp;
 
+            % solutions(:,ii) = [c.equivalent_mean, c.equivalent_median, c.equivalent_unemployed_mean, c.equivalent_unemployed_median, c.equivalent_employed_mean, c.equivalent_employed_median, c.equivalent_emp_sorted, c.equivalent_unemp_sorted, k.equivalent_mean,k.equivalent_median, k.equivalent_unemployed_mean, k.equivalent_unemployed_median, k.equivalent_employed_mean, k.equivalent_employed_median, k.equivalent_emp_sorted, k.equivalent_unemp_sorted, K.two.guess, wc.k_unemp, wc.k_emp, wc.sort_index_unemp, wc.sort_index_emp, wk.k_unemp, wk.k_emp, wk.sort_index_unemp, wk.sort_index_emp]
 
-            filename = ['baseline_' num2str(ii) '.mat']; %Store the values for each grid-point
+            filename = [model_name,'_welfare_analysis_' num2str(ii) '.mat']; %Store the values for each grid-point
             save(project_paths('OUT_ANALYSIS', filename),'-struct','keep');  
            
             toc
         end
     end
 end
+
+% save(project_paths('OUT_ANALYSIS', ['solutions_', model_name, '.mat']), 'solutions');   
