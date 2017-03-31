@@ -1,12 +1,14 @@
-%% Welfare analysis of two Aiyagari models with different parameters
-% Main file for the welfare analysis. Calculates means and medians of the
-% consumption- and cash equivalent and saves them to be recalled by the
-% graph_equivalent.m file for the walfare vs benefit plots. The means and
-% medians are both calculated separately for the unemployed and employed as
-% well as in the total. 
-% Moreover, when not looping over the different values for mu and PI_UE,
-% this file prints the welfare vs wealth plots for a predetermined policy
-% change. 
+%{
+Main file for the welfare analysis. It loads the two different parameterspecifications from the "IN_MODEL_SPECS" directory and then calls m-files in the "IN_MODEL_CODE" 
+directory to calculate means and medians of the
+consumption- and cash equivalent for the different policy changes and save them to be recalled by the
+graph_equivalent.m file for the different plots. The means and
+medians are both calculated separately for the unemployed and employed as
+well as in the total. These are saved seperately for each grid-point after each loop once for each model specification. 
+The scripts expects a model name to be passed on the command line that needs to correspond to a file called [model_name].json 
+in the "IN_MODEL_SPECS" directory. The model name is then recovered form the 
+command line and made available through the matlab variable named "append".
+%}
 
 % of the unemployed and employed, as well as the total means and medians welfare analysis,
 
@@ -19,12 +21,10 @@ addpath ../model_code/
 addpath ../library/matlab-json/
 json.startup
 
-%load random sample
-load(project_paths('OUT_DATA', 'simulation.mat'));
-
 % Load parameters and methods 
 par = json.read(project_paths('IN_MODEL_SPECS', [model_name,'.json']));
 mu = par.mu_grid;
+
 
 % solution methods
 % Default setup for analysis
@@ -42,9 +42,9 @@ setup % load setup
 % the values specified in the mu-grid
 for i=1:2
     if i==1 
-        [ k.one, c.one, K.one, sim.one, store.one, mat.one, grid.one ] = aiyagari_solver(par, func, method, simulation);
+        [ k.one, c.one, K.one, sim.one, store.one, mat.one, grid.one ] = aiyagari_solver(par, func, method);
         U.one.guess = func.U(c.one.guess);
-        U.one.lifetime = zeros(2,grid.one.k_no); %expected life time utility
+        U.one.lifetime = zeros(2,par.k_no); %expected life time utility
         dist=100;
         while dist>1e-8
             EU = par.PI * U.one.lifetime; 
@@ -53,10 +53,10 @@ for i=1:2
             U.one.lifetime = Unew;
         end
         U.one.lifetime(U.one.lifetime == -Inf) = -999999; % Get rid of -Inf for negative consumption for extrapolation
-        U.one.extrap = NaN(ceil(simulation.T/2),simulation.ind_no);
-        for t = ceil((simulation.T+1)/2):simulation.T % Extrapolate life time utility
-            U.one.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.one.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
-            U.one.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.one.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
+        U.one.extrap = NaN(ceil(par.T/2),par.ind_no);
+        for t = ceil((par.T+1)/2):par.T % Extrapolate life time utility
+            U.one.extrap(t-ceil(par.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.one.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
+            U.one.extrap(t-ceil(par.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.one.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
         end
     elseif i==2 
         for ii=1:size(mu,2) 
@@ -78,9 +78,9 @@ for i=1:2
                 method.agg = 'bisection'; % Depending on the mu, you might have to change it to 'bisection' or 'bisectio' to converge;
             end
             setup % refresh setup for new parameter
-            [ k.two, c.two, K.two, sim.two, store.two, mat.two, grid.two ] = aiyagari_solver( par, func, method, simulation);
+            [ k.two, c.two, K.two, sim.two, store.two, mat.two, grid.two ] = aiyagari_solver( par, func, method);
             U.two.guess = func.U(c.two.guess);
-            U.two.lifetime = zeros(2,grid.two.k_no); %expected life time utility
+            U.two.lifetime = zeros(2,par.k_no); %expected life time utility
             dist=100;
             while dist>1e-8
                 EU = par.PI * U.two.lifetime; 
@@ -89,10 +89,10 @@ for i=1:2
                 U.two.lifetime = Unew;
             end
             U.two.lifetime(U.two.lifetime == -Inf) = -999999; % Get rid of -Inf for extrapolation
-            U.two.extrap = NaN(ceil(simulation.T/2),simulation.ind_no);
-            for t = ceil((simulation.T+1)/2):simulation.T % Extrapolate life time utility with idiosyncratic transition
-                U.two.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.two.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
-                U.two.extrap(t-ceil(simulation.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.two.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
+            U.two.extrap = NaN(ceil(par.T/2),par.ind_no);
+            for t = ceil((par.T+1)/2):par.T % Extrapolate life time utility with idiosyncratic transition
+                U.two.extrap(t-ceil(par.T/2),sim.one.e(t,:)==1) = interp1(grid.one.k, U.two.lifetime(1,:), sim.one.k(t,sim.one.e(t,:)==1), 'linear', 'extrap');
+                U.two.extrap(t-ceil(par.T/2),sim.one.e(t,:)==2) = interp1(grid.one.k, U.two.lifetime(2,:), sim.one.k(t,sim.one.e(t,:)==2), 'linear', 'extrap');
             end
             % Calculate the consumption equivalentof the policy reform. If c.equivalent > 1,
             % agents prefer the policy change. If 1 > c.equivalent > 0, agents prefer the

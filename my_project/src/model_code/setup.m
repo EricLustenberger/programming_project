@@ -1,5 +1,8 @@
-% Parameters, which are either affected by changes of the replacement rate
-% or the job-finding probability PI_UE, are part of the setup.
+%{
+Variables and of the Model, which are either affected by changes of the replacement rate
+or the job-finding probability PI_UE, are part of the setup. When looping through the replacement
+rate and job-finding probability grids, the setup is reloaded for every loop. 
+%}
 
 % build transition matrix of agents
 par.PI = [1-par.PI_UE,par.PI_UE;par.PI_EU,1-par.PI_EU]; % [UU,UE;EU;EE]

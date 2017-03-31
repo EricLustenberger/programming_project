@@ -1,10 +1,8 @@
 function [ c, wc ] = consumption_equivalent (par, sim, U)
-%CONSUMPTION EQUIVALENT Calculates the consumption equivalent of a policy
-%change
-%   par = parameters needed to calculate the consumption equivalent
-%   sim = matrices with agent's wealth and employment status
-%   U = life-time utilities before and and after the policy change
-    
+%{
+CONSUMPTION EQUIVALENT is a function that calculates the consumption equivalent of a policy change.
+%}  
+
     % Calculate the consumption equivalent
     % If value > 1, agents prefer steady state one, if 1 > value > 0, agents prefer
     % policy change ( = steady state two).

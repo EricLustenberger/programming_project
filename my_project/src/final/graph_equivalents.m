@@ -1,6 +1,8 @@
-%% Create graph of welfare measures for different values of unemployment benefit (mu) with mu = 0.15 as baseline
-% Produces the welfare vs benefits plots recalling the results obtained
-% from the welfare_analysis.m file. 
+%{ 
+Create graph of welfare measures for different values of unemployment benefit (mu) with mu = 0.15 as baseline
+Produces the welfare vs benefits and welfare vs wealth plots recalling the results obtained
+from the welfare_analysis.m file. 
+%}
 
 function graph_equivalents(model_name)
 
@@ -15,15 +17,6 @@ model = json.read(project_paths('IN_MODEL_SPECS', [model_name,'.json']));
 mu_grid = model.mu_grid;
 mu_n = length(mu_grid);
 
-% Load the data from the solutions.mat 
-%load(project_paths('OUT_ANALYSIS', ['solutions.mat'])); 
-
-%c = solutions(1:8,:) 
-%k = solutions(9:16,:)
-%wc = solutions(18:21,:)
-%wk = solutions(22:25,:)
-%c_equiv = solutions(1:6,:).' 
-%k_equiv = solutions(9:14,:).'
 
 % Load the data
 for i=1:mu_n
@@ -31,7 +24,6 @@ for i=1:mu_n
     c(i) = load(project_paths('OUT_ANALYSIS',filename), 'c');
     k(i) = load(project_paths('OUT_ANALYSIS',filename), 'k');
     wk(i) = load(project_paths('OUT_ANALYSIS',filename), 'wk');
-    wc(i) = load(project_paths('OUT_ANALYSIS',filename), 'wc');
     c_equiv(i,:) = [c(i).c.equivalent_mean, c(i).c.equivalent_median, c(i).c.equivalent_unemployed_mean, c(i).c.equivalent_unemployed_median, c(i).c.equivalent_employed_mean, c(i).c.equivalent_employed_median];
     k_equiv(i,:) = [k(i).k.equivalent_mean, k(i).k.equivalent_median, k(i).k.equivalent_unemployed_mean, k(i).k.equivalent_unemployed_median, k(i).k.equivalent_employed_mean, k(i).k.equivalent_employed_median];
 end
@@ -87,7 +79,7 @@ plot(mu_grid(1:9)', k_equiv(1:9,1)./ output_baseline,'r', mu_grid(1:9)', (c_equi
     ,mu_grid(1:9)', k_equiv(1:9,2)./ output_baseline,'--r' , mu_grid(1:9)', (c_equiv(1:9,2)-1).*100,'--g')
 legend('cash equivalent', 'consumption equivivalent')
 xlabel('unemployment benefit')
-ylabel('cash equivalent / output') %, 'consumption equivalent')
+ylabel('cash equivalent / output')
 refline (0,0)
 axis tight
 filename = ['consumption_vs_cash_equivalent_', model_name, '.png'];
@@ -96,35 +88,7 @@ saveas(gcf,project_paths('OUT_FIGURES', filename));
 
 for i= model.wealth_plotting
 % Wealth vs equivalent figures 
-% consumption equivalent
-	%figure (5+i)
-	%plot(wc(19,i)(wc(21,i)),c(7,i),'g.',wc(18,i)(wc(20,i)),c(8,i),'r.')
-	%legend('employed','unemployed')
-	%xlabel('wealth')
-	%ylabel('consumption equivalent')
-	%refline (0,1)
-	%saveas(gcf,project_paths('OUT_FIGURES','consumption_equivalent_vs_wealth_'model_name'.png'));
-
-	%figure (6+i)
-	%plot(wk(23,i)(wk(25,i)),k(15,i)./output_baseline...
-    %	,'g.',wk(22,i)(wk(24,i)),k(16,i)./output_baseline,'r.')
-	%legend('employed','unemployed')
-	%xlabel('wealth')
-	%ylabel('cash equivalent / output')
-	%refline (0,0)
-	%saveas(gcf,project_paths('OUT_FIGURES','cash_equivalent_vs_wealth_'model_name'.png'));
-
-			figure (5+i)
-	plot(wc(i).wc.k_emp(wc(i).wc.sort_index_emp),c(i).c.equivalent_emp_sorted./output_baseline...
-    	,'g.',wc(i).wc.k_unemp(wc(i).wc.sort_index_unemp),c(i).c.equivalent_unemp_sorted./output_baseline,'r.')
-	legend('employed','unemployed')
-	xlabel('wealth')
-	ylabel('cash equivalent / output')
-	refline (0,0)
-	filename = ['consumption_equivalent_vs_wealth_', model_name, '.png'];
-	saveas(gcf,project_paths('OUT_FIGURES', filename));
-
-		figure (6+i)
+		figure (5+i)
 	plot(wk(i).wk.k_emp(wk(i).wk.sort_index_emp),k(i).k.equivalent_emp_sorted./output_baseline...
     	,'g.',wk(i).wk.k_unemp(wk(i).wk.sort_index_unemp),k(i).k.equivalent_unemp_sorted./output_baseline,'r.')
 	legend('employed','unemployed')

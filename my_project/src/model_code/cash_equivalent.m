@@ -1,10 +1,7 @@
 function [ k, wk ] = cash_equivalent( grid, sim, U )
-%CASH EQUIVALENT Calculates the capital equivalent of a policy change
-%   grid = the capital grid to extrapolate the capital compensation of the
-%          policy  change
-%   sim = matrices with agent's wealth and employment status
-%   U = life-time utilities before and and after the policy change
-
+%{
+CASH EQUIVALENT is a function that calculates the capital equivalent of a policy change.
+%}   
     ind_no = size(sim.one.k,2);
     T = size(sim.one.k,1);
     k.equivalent = NaN(ceil(T/2),ind_no);

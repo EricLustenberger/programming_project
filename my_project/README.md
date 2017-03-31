@@ -31,9 +31,9 @@ Getting started (Matlab-based project)
 
 2. Use the "find in project"-functionality of your editor to search and replace the following terms:
 
-        NNN -> Your name
-        UUU -> Your affiliation
-        TTT -> The title of the project
+        Eric Lustenberger -> Your name
+        University of Bonn -> Your affiliation
+        Programming -> The title of the project
 
 3. Make sure to have [Miniconda](http://conda.pydata.org/miniconda.html) or Anaconda installed. Matlab and a modern LaTeX distribution (e.g. [TeXLive](www.tug.org/texlive/), [MacTex](http://tug.org/mactex/), or [MikTex](http://miktex.org/)) need to be found on your path.
 

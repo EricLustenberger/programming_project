@@ -7,62 +7,39 @@
 Introduction
 ===============
 
-Documentation on the design rationale, Waf, and more background is at http://hmgaudecker.github.io/econ-project-templates/ (The running example is the same, but it uses Python instead of Matlab as the language for the analysis)
+The goal of this Programming project was to use Waf to improve reproducibility and understanding of the code used for my project module. The implementation in Waf is particularly suitable, since the Paper consists of a baseline case and an analysis 
+case, which are both compared to show that model specification matters in the context of welfare analysis. The same code is thus used twice with a minor modification in the second case. The following document explains how the code works, such that my results can be replicated with relative ease. The main code is written in Matlab. I therefore used the Matlab template of the course. Documentation on the design rationale, Waf, and more background is at http://hmgaudecker.github.io/econ-project-templates/ . Moreover, the Matlab version of the template uses a modified and translated version of Stachurski's and Sargent's code accompanying their Online Course :cite:`StachurskiSargent13` for Schelling's (1969, :cite:`Schelling69`) segregation model as the running example.
 
-The Matlab version of the template uses a modified and translated version of Stachurski's and Sargent's code accompanying their Online Course :cite:`StachurskiSargent13` for Schelling's (1969, :cite:`Schelling69`) segregation model as the running example.
+.. _idea_of_Waf:
 
+Waf and the division of tasks
+-----------------------------
 
-.. _getting_started:
+The core idea is to split up parts of the code, which will be utilized more than once in order to minimize the occurence of errors and to improve efficiency and readability of the code. Input and output are kept apart and when rerunning the code, the output is deleated and replaced by an updated version. Furthermore, the different source files are kept in different folders connected by wscript files, which govern the order and the dependencies of the different files. 
 
-Getting started
----------------
+.. literalinclude:: ../wscript
 
-**This assumes you have completed the steps in the** `README.md file <https://github.com/hmgaudecker/econ-project-templates/tree/matlab#templates-for-reproducible-research-projects-in-economics>`_ **and everything worked.**
+.. _subdirectories:
 
-The logic of the project template works by step of the analysis: 
+How the directories are structured:
+-----------------------------------
 
-1. Data management
-2. The actual estimations / simulations / ?
-3. Visualisation and results formatting (e.g. exporting of LaTeX tables)
-4. Research paper and presentations. 
-   
-It can be useful to have code and model parameters available to more than one of these steps, in that case see sections :ref:`model_specifications`, :ref:`model_code`, and :ref:`library`.
+The code of the project will be divided in subdirectories:
 
-First of all, think about whether this structure fits your needs -- if it does not, you need to adjust (delete/add/rename) directories and files in the following locations:
+    * :ref:`model_specifications`, consisting of assets_baseline.json and endogenous_job_finding_duration.json each containing the parameter values and fixed model specifications used for the analysis. 
+    * :ref:`model_code`, consisting of different m-files containing the model code.
+    * *Analysis*, is the main file calling the model specifications and parameters to run the analysis. It can be found in this documentation in :ref:`analysis`.
+    * *Final*, consists of a graph_equivalents.m file, which creates the plots. It can be found in this documentation in :ref:`final`.
+    * *Paper*, consisting of a tex-document, which can be found in this documentation in :ref:`paper`.
 
-    * Directories in **src/**;
-    * The list of included wscript files in **src/wscript**;
-    * The documentation source files in **src/documentation/** (Note: These should follow the directories in **src** exactly);
-    * The list of included documentation source files in **src/documentation/index.rst**
+.. _projectpaths:
 
-Later adjustments should be painlessly possible, so things won't be set in stone.
-
-Once you have done that, move your source data to **src/original_data/** and start filling up the actual steps of the project workflow (data management, analysis, final steps, paper). All you should need to worry about is to call the correct task generators in the wscript files. Always specify the actions in the wscript that lives in the same directory as your main source file. Make sure you understand how the paths work in Waf and how to use the auto-generated files in the language you are using particular language (see the section on :ref:`project_paths`).
-
-
-.. _project_paths:
-
-Project paths
+Project paths:
 --------------
 
-A variety of project paths are defined in the top-level wscript file. These are exported to header files in other languages. So in case you require different paths (e.g. if you have many different datasets, you may want to have one path to each of them), adjust them in the top-level wscript file.
-
-The following is taken from the top-level wscript file. Modify any project-wide path settings there.
+In the wscript file in the main directory, all project-wide paths are defined, making the definition of paths easier and less problematic if our project is run on different machines. 
+The following code is taken from the above-mentioned file.
 
 .. literalinclude:: ../../wscript
     :start-after: out = 'bld'
-    :end-before:     # Convert the directories into Waf nodes
-
-
-As should be evident from the similarity of the names, the paths follow the steps of the analysis in the :file:`src` directory:
-
-    1. **data_management** → **OUT_DATA**
-    2. **analysis** → **OUT_ANALYSIS**
-    3. **final** → **OUT_FINAL**, **OUT_FIGURES**, **OUT_TABLES**
-
-These will re-appear in automatically generated header files by calling the ``write_project_paths`` task generator (just use an output file with the correct extension for the language you need -- ``.py``, ``.r``, ``.m``, ``.do``)
-
-Here's what comes out for Matlab, to be imported from ``bld/project_paths.m``:
-
-.. literalinclude:: ../../bld/project_paths.m
-   :language: matlab
+    :end-before:     # Convert the directories into Waf nodes. 

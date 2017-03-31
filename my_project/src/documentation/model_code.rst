@@ -4,12 +4,49 @@
 Model code
 ======================
 
-The directory **src.model_code** contains source files that might differ by model and which are potentially used at various steps of the analysis.
+The Model code is composed of a total of four different m-files. The :file:`aiyagari_solver.m` contains the solution algorithms used to simulate and solve the :cite:'aiyagari' model. :file:`cash_equivalent.m` and :file:`consumption_equivalent.m` calculate the welfare effects of a policy change and :file:`setup.m`: holds some model specifications, which are endogenous. 
 
-For example, you may have a class that is used both in the :ref:`analysis` and the :ref:`final` steps. Additionally, maybe you have different utility functions in the baseline version and for your robustness check. You can just inherit from the baseline class and override the utility function then.
+The Aiyagari Model
+------------------
+The Aiyagari Model, :file:`aiyagari_solver.m`:
 
-Schelling example, :file:`move_until_happy.m`:
+.. include:: ../model_code/aiyagari_solver.m
+   :start-after: %{
+   :end-before: %}
 
-.. include:: ../model_code/move_until_happy.m
+*Solution Algorithms and methods*
+-To solve the household problem
+Endogenous Gridpoint by :cite:'endgridmethod'
+or Fixed-Point method depending on the policy change considered,
+to assure convergence 
+- Aggregation method
+bisection method or gradual updating depending on the policy change considered, to assure 
+convergence 
+
+
+
+The Cash Equivalent
+-------------------
+The Cash Equivalent, :file:`cash_equivalent.m`:
+
+.. include:: ../model_code/aiyagari_solver.m
+   :start-after: %{
+   :end-before: %}
+
+
+The Consumption Equivalent
+--------------------------
+The Consumption Equivalent, :file:`consumption_equivalent.m`:
+
+.. include:: ../model_code/consumption_equivalent.m
+   :start-after: %{
+   :end-before: %}
+
+
+The Setup
+--------------------------
+The Setup, :file:`setup.m`:
+
+.. include:: ../model_code/setup.m
    :start-after: %{
    :end-before: %}

@@ -38,7 +38,7 @@ def build(ctx):
             ],
               deps=[
                  ctx.path_to(ctx, 'IN_MODEL_SPECS', '{}.json'.format(model)),
-                 ctx.path_to(ctx, 'OUT_DATA', 'simulation.mat'),
+                 # ctx.path_to(ctx, 'OUT_DATA', 'simulation.mat'),
                  ctx.path_to(ctx, 'IN_MODEL_CODE', 'setup.m'),
                  ctx.path_to(ctx, 'IN_MODEL_CODE', 'aiyagari_solver.m'),
                  ctx.path_to(ctx, 'IN_MODEL_CODE', 'cash_equivalent.m'),
